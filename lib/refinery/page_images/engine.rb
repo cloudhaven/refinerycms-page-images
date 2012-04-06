@@ -23,6 +23,7 @@ module Refinery
         require 'refinerycms-pages'
         Refinery::Page.send :has_many_page_images
         Refinery::Features::Feature.send :has_many_page_images if defined?(::Refinery::Features)
+        Refinery::Features::Plan.send :has_many_page_images if defined?(::Refinery::Features)
         Refinery::Blog::Post.send :has_many_page_images if defined?(::Refinery::Blog)
         Refinery::Image.module_eval do
           has_many :image_pages, :dependent => :destroy
