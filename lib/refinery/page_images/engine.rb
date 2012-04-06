@@ -30,7 +30,9 @@ module Refinery
       end
 
       config.after_initialize do
-        
+
+        block = proc{ |tab| register tab }
+
         Refinery::PageImages.mountings.each do |mountable|
           registerable = ""
           case mountable.split(":").size
@@ -39,9 +41,7 @@ module Refinery
           when 2
             registerable = mountable
           end
-          registerable.constantize.send(:register) do |tab|
-            register tab
-          end
+          registerable.constantize.send(:register, &block)
         end
 
         Refinery.register_engine(Refinery::PageImages)
