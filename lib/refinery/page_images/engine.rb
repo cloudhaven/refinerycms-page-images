@@ -39,7 +39,6 @@ module Refinery
           when 2
             registerable = mountable
           end
-          binding.pry
           registerable.constantize.send(:register) do |tab|
             register tab
           end
