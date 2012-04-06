@@ -21,26 +21,25 @@ module Refinery
 
       config.to_prepare do
         require 'refinerycms-pages'
-        Refinery::Page.send :has_many_page_images
-        Refinery::Blog::Post.send :has_many_page_images if defined?(::Refinery::Blog)
+        Refinery::PageImages.mountings.each do |mountable|
+          mountable.constantize.send :has_many_page_images
+        end
         Refinery::Image.module_eval do
           has_many :image_pages, :dependent => :destroy
         end
       end
 
       config.after_initialize do
-        Refinery::Pages::Tab.register do |tab|
-          register tab
-        end
         
-        if defined?(Refinery::Features::Tab)
-          Refinery::Features::Tab.register do |tab|
-            register tab
+        Refinery::PageImages.mountings.each do |mountable|
+          registerable = ""
+          case register = mountable.split(":").size
+          when 3
+            registerable = "#{register[0]}::#{register[1]}"
+          when 2
+            registerable = register
           end
-        end
-
-        if defined?(Refinery::Blog::Tab)
-          Refinery::Blog::Tab.register do |tab|
+          registerable.constantize.send :register do |tab|
             register tab
           end
         end
