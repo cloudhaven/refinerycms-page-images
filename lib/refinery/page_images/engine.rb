@@ -33,11 +33,11 @@ module Refinery
         
         Refinery::PageImages.mountings.each do |mountable|
           registerable = ""
-          case register = mountable.split(":").size
+          case mountable.split(":").size
           when 3
             registerable = "#{register[0]}::#{register[1]}"
           when 2
-            registerable = register
+            registerable = mountable
           end
           registerable.constantize.send :register do |tab|
             register tab
