@@ -31,17 +31,18 @@ module Refinery
 
       config.after_initialize do
 
-        block = proc{ |tab| register tab }
 
         Refinery::PageImages.mountings.each do |mountable|
           registerable = ""
-          case mountable.split(":").size
+          case mountable.split("::").size
           when 3
-            registerable = "#{register[0]}::#{register[1]}"
+            registerable = "#{mountable.split("::")[0]}::#{mountable.split("::")[1]}::Tab"
           when 2
-            registerable = mountable
+            registerable = "#{mountable}s::Tab"
           end
-          registerable.constantize.send(:register, &block)
+          registerable.constantize.register do |tab|
+            register tab
+          end
         end
 
         Refinery.register_engine(Refinery::PageImages)
