@@ -22,7 +22,7 @@ module Refinery
       config.to_prepare do
         require 'refinerycms-pages'
         Refinery::PageImages.mountings.each do |mountable|
-          mountable.constantize.send :has_many_page_images
+            mountable.try(:constantize).try(:send, :has_many_page_images)
         end
         Refinery::Image.module_eval do
           has_many :image_pages, :dependent => :destroy
@@ -33,11 +33,13 @@ module Refinery
 
 
         Refinery::PageImages.mountings.each do |mountable|
-          registerable = ""
-          case mountable.split("::").size
+          registerable, mount_parts = "", mountable.split("::")
+          case mount_parts.size
           when 3
-            registerable = "#{mountable.split("::")[0]}::#{mountable.split("::")[1]}::Tab"
+            registerable = "#{mount_parts[0]}::#{mount_parts[1]}::Tab"
           when 2
+            # massive hack here, need to have a better way of detecting what the right
+            # class to inject the tab into is going to be e.g. Page -> Pages
             registerable = "#{mountable}s::Tab"
           end
           registerable.constantize.register do |tab|
