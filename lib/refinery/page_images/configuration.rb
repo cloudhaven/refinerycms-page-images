@@ -6,6 +6,6 @@ module Refinery
     config_accessor :mountings
 
     self.captions = false
-    self.mountings = ["Refinery::Blog::Post", "Refinery::Page"]
+    self.mountings = ["Refinery::Page"]
   end
 end
