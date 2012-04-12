@@ -22,7 +22,7 @@ module Refinery
       config.to_prepare do
         require 'refinerycms-pages'
         Refinery::PageImages.mountings.each do |mountable|
-            mountable.try(:constantize).try(:send, :has_many_page_images)
+            mountable.constantize.send :has_many_page_images
         end
         Refinery::Image.module_eval do
           has_many :image_pages, :dependent => :destroy
